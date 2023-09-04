@@ -25,7 +25,7 @@ function App() {
 
   return (
     <main>
-      <div classname="loader-container">
+      <div classname={`loader-container ${!weatherData && "active"}`}>
         <img src={loader} alt="loading icon" />
       </div>
       <p className="city-name">Mont de marsan</p>
