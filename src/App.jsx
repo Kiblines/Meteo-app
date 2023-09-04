@@ -12,8 +12,8 @@ function App() {
         console.log(response);
         return response.json();
       })
-      .then((data) => {
-        console.log(data);
+      .then((responseData) => {
+        console.log(responseData);
         setWeatherData({
           city: responseData.data.city,
           country: responseData.data.country,
@@ -25,15 +25,23 @@ function App() {
 
   return (
     <main>
-      <div classname={`loader-container ${!weatherData && "active"}`}>
+      <div className={`loader-container ${!weatherData && "active"}`}>
         <img src={loader} alt="loading icon" />
       </div>
-      <p className="city-name">Mont de marsan</p>
-      <p className="country-name">France</p>
-      <p className="temperature">17</p>
-      <div className="info-icon-container">
-        <img src="/icons/01d.svg" className="info-icon" alt="weather icon" />
-      </div>
+      {weatherData && (
+        <>
+          <p className="city-name">{weatherData.city}</p>
+          <p className="country-name">{weatherData.country}</p>
+          <p className="temperature">{weatherData.temperature}°</p>
+          <div className="info-icon-container">
+            <img
+              src={`/icons/${weatherData.iconId}.svg`}
+              className="info-icon"
+              alt="weather icon"
+            />
+          </div>
+        </>
+      )}
     </main>
   );
 }
