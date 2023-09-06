@@ -1,21 +1,25 @@
-import loader from "./assets/loader.svg";
-import "./App.css";
 import { useEffect, useState } from "react";
-const APIKEY = import.meta.env.VITE_WEATHER_API_KEY;
+import loader from "./assets/loader.svg";
 import browser from "./assets/browser.svg";
+import "./App.css";
+const APIKEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [errorInfo, setErrorInfo] = useState(null);
 
   useEffect(() => {
-    fetch(`http://api.aidrvisual.com/v2/nearest_city?key=${APIKEY}`)
+    fetch(`http://api.airvisual.com/v2/nearest_city?key=${APIKEY}`)
       .then((response) => {
         console.log(response);
+        // 400 - 499 : Erreur clients
+        // 500 - 599 : Erreur serveur
+        if (!response.ok)
+          throw new Error(`Error ${response.status}, ${response.statusText}`);
+
         return response.json();
       })
       .then((responseData) => {
-        console.log(responseData);
         setWeatherData({
           city: responseData.data.city,
           country: responseData.data.country,
@@ -24,8 +28,6 @@ function App() {
         });
       })
       .catch((err) => {
-        console.log(err);
-        console.dir(err);
         setErrorInfo(err.message);
       });
   }, []);
@@ -37,6 +39,7 @@ function App() {
       >
         <img src={loader} alt="loading icon" />
       </div>
+
       {weatherData && (
         <>
           <p className="city-name">{weatherData.city}</p>
@@ -51,9 +54,10 @@ function App() {
           </div>
         </>
       )}
+
       {errorInfo && !weatherData && (
         <>
-          <p className="error-information">{errorInfo.msg}</p>
+          <p className="error-information">{errorInfo}</p>
           <img src={browser} alt="error icon" />
         </>
       )}
